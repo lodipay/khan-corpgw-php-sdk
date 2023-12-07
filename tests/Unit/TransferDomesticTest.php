@@ -37,12 +37,6 @@ it('should transfer fund domestically to user successfully', function () {
             'loginName' => '9441****',
             'tranPassword' => 'pass',
         ]),
-        [
-            'headers' => [
-                'Authorization' => 'Bearer token',
-            ],
-        ]
     );
-    var_dump('LOG: ', json_encode($response));
     expect($response)->transferid->toBeString();
 });

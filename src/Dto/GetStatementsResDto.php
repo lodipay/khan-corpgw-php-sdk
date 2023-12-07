@@ -2,7 +2,9 @@
 
 namespace Lodipay\KhanCorpGwSDK\Dto;
 
-class GetStatementsResDto extends ResponseDto
+use Tsetsee\DTO\DTO\TseDTO;
+
+class GetStatementsResDto extends TseDTO
 {
     /**
      * Дансны дугаар

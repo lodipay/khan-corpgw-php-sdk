@@ -41,11 +41,6 @@ it('should return bank accounts of user', function () {
         'handler' => HandlerStack::create(getAccountsMockHandler()),
     ]);
 
-    $response = $service->getAccounts([
-        'headers' => [
-            'Authorization' => 'Bearer token',
-        ],
-    ]);
-    var_dump('LOG: ', json_encode($response));
+    $response = $service->getAccounts();
     expect($response)->toBeArray();
 });

@@ -2,7 +2,9 @@
 
 namespace Lodipay\KhanCorpGwSDK\Dto;
 
-class GetAccountsResDto extends ResponseDto
+use Tsetsee\DTO\DTO\TseDTO;
+
+class GetAccountsResDto extends TseDTO
 {
 
     /**
