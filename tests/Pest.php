@@ -14,6 +14,25 @@ if (file_exists(__DIR__ . '/../.env')) {
     $dotenv->load(__DIR__ . '/../.env');
 }
 
+function getClientService(array $options = []): KhanCorpGwService
+{
+    $logger = null;
+
+    if ('true' === $_ENV['DEBUG']) {
+        $logger = new Logger('test');
+        $logger->pushHandler(new StreamHandler(STDOUT, Logger::DEBUG));
+    }
+
+    return new KhanCorpGwService(
+        'user1',
+        '123',
+        options: array_replace_recursive([
+            'logger' => $logger,
+        ], $options),
+    );
+}
+
+
 function getMockClientService(array $options = []): KhanCorpGwService
 {
     $logger = null;

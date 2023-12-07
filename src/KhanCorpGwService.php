@@ -55,6 +55,9 @@ class KhanCorpGwService extends TseGuzzle
             'form_params' => [
                 'username' => $this->username,
                 'password' => $this->password,
+            ],
+            'query' => [
+                'grant_type' => 'client_credentials'
             ]
         ]));
         $accessTokenData->expireDate = CarbonImmutable::now()->addMinutes($_ENV['KHAN_CORPGW_TOKEN_TTL'] ?? 1800);
