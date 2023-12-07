@@ -2,7 +2,9 @@
 
 namespace Lodipay\KhanCorpGwSDK\Dto;
 
-class TransferDomesticResDto extends ResponseDto
+use Tsetsee\DTO\DTO\TseDTO;
+
+class TransferDomesticResDto extends TseDTO
 {
     /**
      * Гүйлгээний код

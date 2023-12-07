@@ -8,6 +8,6 @@ class BadResultException extends \Exception
 {
     public function __construct(public ResponseDTO $responseDTO)
     {
-        parent::__construct("BadResultException: " . $responseDTO->message);
+        parent::__construct("BadResultException: ");
     }
 }

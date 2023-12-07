@@ -46,11 +46,6 @@ it('should return statements of user account', function () {
         'handler' => HandlerStack::create(getStatementsMockHandler()),
     ]);
 
-    $response = $service->getStatements('506525****', null, null, [
-        'headers' => [
-            'Authorization' => 'Bearer token',
-        ],
-    ]);
-    var_dump('LOG: ', json_encode($response));
+    $response = $service->getStatements('506525****');
     expect($response)->toBeArray();
 });

@@ -2,7 +2,9 @@
 
 namespace Lodipay\KhanCorpGwSDK\Dto;
 
-class GetBalanceResDto extends ResponseDto
+use Tsetsee\DTO\DTO\TseDTO;
+
+class GetBalanceResDto extends TseDTO
 {
     /**
      * Дансны төрөл

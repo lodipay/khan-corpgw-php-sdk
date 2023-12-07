@@ -2,73 +2,90 @@
 
 namespace Lodipay\KhanCorpGwSDK;
 
+use Carbon\CarbonImmutable;
+use Lodipay\KhanCorpGwSDK\Dto\AccessTokenData;
 use Lodipay\KhanCorpGwSDK\Dto\GetAccountsResDto;
 use Lodipay\KhanCorpGwSDK\Dto\GetBalanceResDto;
 use Lodipay\KhanCorpGwSDK\Dto\GetStatementsResDto;
-use Lodipay\KhanCorpGwSDK\Dto\GetTokenReqDto;
-use Lodipay\KhanCorpGwSDK\Dto\GetTokenResDto;
 use Lodipay\KhanCorpGwSDK\Dto\TransferDomesticReqDto;
 use Lodipay\KhanCorpGwSDK\Dto\TransferDomesticResDto;
 use Lodipay\KhanCorpGwSDK\Dto\TransferInterbankReqDto;
 use Lodipay\KhanCorpGwSDK\Dto\TransferInterbankResDto;
-use Psr\Http\Message\ResponseInterface;
 use Tsetsee\TseGuzzle\TseGuzzle;
 
 class KhanCorpGwService extends TseGuzzle
 {
-    public function __construct(array $options = [])
+
+    private ?AccessTokenData $accessTokenData = null;
+
+    public function __construct(private $username, private $password, array $options = [])
     {
         parent::__construct(array_replace_recursive([
             'base_uri' => 'https://doob.world:6442/v1/',
-            'oauth2' => 'bearer'
+            'oauth2' => 'bearer',
         ], $options));
     }
 
-    public function getAccessToken(): string
+
+    /**
+     * Oauth access token override function.
+     * 
+     * @return string
+     */
+    protected function getAccessToken(): string
     {
-        return '123123km12k312';
+        if (!$this->accessTokenData || !$this->accessTokenData->isAccessTokenActive()) {
+            $this->accessTokenData = $this->getAccessTokenData();
+        }
+        return $this->accessTokenData->token;
     }
 
     /**
-     * Get access token
+     * Get access token from API
      * 
-     * @param GetTokenReqDto $dto
-     * @param array<string, mixed> $options
      * 
-     * @return GetTokenResDto
+     * @return AccessTokenData
      */
-    public function getToken(GetTokenReqDto $dto, array $options = []): GetTokenResDto
+    public function getAccessTokenData(): AccessTokenData
     {
-        return GetTokenResDto::fromResponse($this->callAPI('POST', 'auth/token', array_replace_recursive([
+        $accessTokenData =  AccessTokenData::from($this->callAPI('POST', 'auth/token', [
             'headers' => [
                 'Content-Type' => 'application/x-www-form-urlencoded',
             ],
-            'form_params' => $dto->toArray()
-        ], $options)));
+            'form_params' => [
+                'username' => $this->username,
+                'password' => $this->password,
+            ]
+        ]));
+        $accessTokenData->expireDate = CarbonImmutable::now()->addMinutes($_ENV['KHAN_CORPGW_TOKEN_TTL'] ?? 1800);
+
+        return $accessTokenData;
     }
 
     /**
      * Get bank accounts
-     * @param array<string, mixed> $options
      * 
      * @return array<GetAccountsResDto>
      */
-    public function getAccounts(array $options = []): array
+    public function getAccounts(): array
     {
-        return GetAccountsResDto::fromResponseArray($this->callAPI('GET', 'accounts', $options));
+        return GetAccountsResDto::fromArray($this->callAPI('GET', 'accounts', [
+            'oauth2' => true
+        ]));
     }
 
     /**
      * Get balance of an account
      * 
      * @param string $accountNo
-     * @param array<string, mixed> $options
      * 
      * @return GetBalanceResDto
      */
-    public function getBalance(string $accountNo, array $options = []): GetBalanceResDto
+    public function getBalance(string $accountNo): GetBalanceResDto
     {
-        return GetBalanceResDto::fromResponse($this->callAPI('GET', 'accounts/' . $accountNo . 'balance', $options));
+        return GetBalanceResDto::from($this->callAPI('GET', 'accounts/' . $accountNo . 'balance', [
+            'oauth2' => true
+        ]));
     }
 
     /**
@@ -77,48 +94,52 @@ class KhanCorpGwService extends TseGuzzle
      * @param string $accountNo
      * @param string $beginDate
      * @param string $endDate
-     * @param array<string, mixed> $options
      * 
      * @return array<GetStatementsResDto>
      */
-    public function getStatements(string $accountNo, ?string $beginDate = null, ?string $endDate = null, array $options = []): array
+    public function getStatements(string $accountNo, ?string $beginDate = null, ?string $endDate = null): array
     {
-        return GetStatementsResDto::fromResponseArray($this->callAPI('GET', 'statements/' . $accountNo, array_replace_recursive([
-            'query' => [
-                'beginDate' => $beginDate,
-                'endDate' => $endDate
+        return GetStatementsResDto::fromArray($this->callAPI(
+            'GET',
+            'statements/' . $accountNo,
+            [
+                'query' => [
+                    'beginDate' => $beginDate,
+                    'endDate' => $endDate
+                ],
+                'oauth2' => true,
             ]
-        ], $options)));
+        ));
     }
 
     /**
      * Domestic transfer
      * 
      * @param TransferDomesticReqDto $dto
-     * @param array<string, mixed> $options
      * 
      * @return TransferDomesticResDto
      */
-    public function transferDomestic(TransferDomesticReqDto $dto, array $options = []): TransferDomesticResDto
+    public function transferDomestic(TransferDomesticReqDto $dto): TransferDomesticResDto
     {
-        return TransferDomesticResDto::fromResponse($this->callAPI('POST', 'transfer/domestic', array_replace_recursive([
-            'json' => $dto->toArray()
-        ], $options)));
+        return TransferDomesticResDto::from($this->callAPI('POST', 'transfer/domestic', [
+            'json' => $dto->toArray(),
+            'oauth2' => true,
+        ]));
     }
 
     /**
      * Interbank transfer
      * 
      * @param TransferInterbankReqDto $dto
-     * @param array<string, mixed> $options
      * 
      * @return TransferInterbankResDto
      */
-    public function transferInterbank(TransferInterbankReqDto $dto, array $options = []): TransferInterbankResDto
+    public function transferInterbank(TransferInterbankReqDto $dto): TransferInterbankResDto
     {
-        return TransferInterbankResDto::fromResponse($this->callAPI('POST', 'transfer/interbank', array_replace_recursive([
-            'json' => $dto->toArray()
-        ], $options)));
+        return TransferInterbankResDto::from($this->callAPI('POST', 'transfer/interbank', [
+            'json' => $dto->toArray(),
+            'oauth2' => true,
+        ]));
     }
 
     /**
@@ -128,10 +149,11 @@ class KhanCorpGwService extends TseGuzzle
      * @param string $uri
      * @param array<string, mixed> $options
      * 
-     * @return ResponseInterface
+     * @return mixed
      */
-    private function callAPI(string $method, string $uri, array $options = []): ResponseInterface
+    private function callAPI(string $method, string $uri, array $options = []): mixed
     {
-        return $this->client->request($method, $uri, $options);
+        $response = $this->client->request($method, $uri, $options);
+        return json_decode((string) $response->getBody(), true);
     }
 }

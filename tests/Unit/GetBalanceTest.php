@@ -27,11 +27,6 @@ it('should return balance of user account', function () {
         'handler' => HandlerStack::create(getBalanceMockHandler()),
     ]);
 
-    $response = $service->getBalance('506525****', [
-        'headers' => [
-            'Authorization' => 'Bearer token',
-        ],
-    ]);
-    var_dump('LOG: ', json_encode($response));
+    $response = $service->getBalance('506525****');
     expect($response)->toBeObject();
 });
