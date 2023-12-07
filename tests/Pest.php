@@ -8,10 +8,10 @@ use Monolog\Logger;
 use Symfony\Component\Dotenv\Dotenv;
 
 $dotenv = new Dotenv();
-$dotenv->load(__DIR__ . '/../.env');
+$dotenv->load(__DIR__ . '/../.env.example');
 
-if (file_exists(__DIR__ . '/../.env.example')) {
-    $dotenv->load(__DIR__ . '/../.env.example');
+if (file_exists(__DIR__ . '/../.env')) {
+    $dotenv->load(__DIR__ . '/../.env');
 }
 
 function getMockClientService(array $options = []): KhanCorpGwService
