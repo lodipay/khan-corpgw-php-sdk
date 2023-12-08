@@ -4,7 +4,7 @@ use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Psr7\Response;
 use Lodipay\KhanCorpGwSDK\Dto\TransferDomesticReqDto;
-use Lodipay\KhanCorpGwSDK\KhanCorpGwService;
+use Lodipay\KhanCorpGwSDK\KhanCorpGwAPI;
 
 function getTransferDomesticMockHandler()
 {
@@ -21,8 +21,8 @@ function getTransferDomesticMockHandler()
 }
 
 it('should transfer fund domestically to user successfully', function () {
-    /** @var KhanCorpGwService $service */
-    $service = test()->getMockClientService([
+    /** @var KhanCorpGwAPI $service */
+    $service = test()->getMockClientAPI([
         'handler' => HandlerStack::create(getTransferDomesticMockHandler()),
     ]);
 

@@ -2,7 +2,7 @@
 
 use Carbon\Carbon;
 use Lodipay\KhanCorpGwSDK\Dto\AccessTokenData;
-use Lodipay\KhanCorpGwSDK\KhanCorpGwService;
+use Lodipay\KhanCorpGwSDK\KhanCorpGwAPI;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
 use Symfony\Component\Dotenv\Dotenv;
@@ -14,7 +14,7 @@ if (file_exists(__DIR__ . '/../.env')) {
     $dotenv->load(__DIR__ . '/../.env');
 }
 
-function getClientService(array $options = []): KhanCorpGwService
+function getClientService(array $options = []): KhanCorpGwAPI
 {
     $logger = null;
 
@@ -23,7 +23,7 @@ function getClientService(array $options = []): KhanCorpGwService
         $logger->pushHandler(new StreamHandler(STDOUT, Logger::DEBUG));
     }
 
-    return new KhanCorpGwService(
+    return new KhanCorpGwAPI(
         'user1',
         '123',
         options: array_replace_recursive([
@@ -33,7 +33,7 @@ function getClientService(array $options = []): KhanCorpGwService
 }
 
 
-function getMockClientService(array $options = []): KhanCorpGwService
+function getMockClientAPI(array $options = []): KhanCorpGwAPI
 {
     $logger = null;
 
@@ -42,7 +42,7 @@ function getMockClientService(array $options = []): KhanCorpGwService
         $logger->pushHandler(new StreamHandler(STDOUT, Logger::DEBUG));
     }
 
-    $mock = Mockery::mock(KhanCorpGwService::class)->makePartial();
+    $mock = Mockery::mock(KhanCorpGwAPI::class)->makePartial();
 
     $mock->__construct(
         username: $_ENV['KHAN_CORPGW_ACCOUNT_USERNAME'],

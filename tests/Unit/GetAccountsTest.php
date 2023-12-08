@@ -3,7 +3,7 @@
 use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Psr7\Response;
-use Lodipay\KhanCorpGwSDK\KhanCorpGwService;
+use Lodipay\KhanCorpGwSDK\KhanCorpGwAPI;
 
 function getAccountsMockHandler()
 {
@@ -36,8 +36,8 @@ function getAccountsMockHandler()
 }
 
 it('should return bank accounts of user', function () {
-    /** @var KhanCorpGwService $service */
-    $service = test()->getMockClientService([
+    /** @var KhanCorpGwAPI $service */
+    $service = test()->getMockClientAPI([
         'handler' => HandlerStack::create(getAccountsMockHandler()),
     ]);
 

@@ -13,7 +13,7 @@ use Lodipay\KhanCorpGwSDK\Dto\TransferInterbankReqDto;
 use Lodipay\KhanCorpGwSDK\Dto\TransferInterbankResDto;
 use Tsetsee\TseGuzzle\TseGuzzle;
 
-class KhanCorpGwService extends TseGuzzle
+class KhanCorpGwAPI extends TseGuzzle
 {
 
     private ?AccessTokenData $accessTokenData = null;
@@ -25,7 +25,6 @@ class KhanCorpGwService extends TseGuzzle
             'oauth2' => 'bearer',
         ], $options));
     }
-
 
     /**
      * Oauth access token override function.

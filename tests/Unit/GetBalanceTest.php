@@ -3,7 +3,7 @@
 use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Psr7\Response;
-use Lodipay\KhanCorpGwSDK\KhanCorpGwService;
+use Lodipay\KhanCorpGwSDK\KhanCorpGwAPI;
 
 function getBalanceMockHandler()
 {
@@ -22,8 +22,8 @@ function getBalanceMockHandler()
 }
 
 it('should return balance of user account', function () {
-    /** @var KhanCorpGwService $service */
-    $service = test()->getMockClientService([
+    /** @var KhanCorpGwAPI $service */
+    $service = test()->getMockClientAPI([
         'handler' => HandlerStack::create(getBalanceMockHandler()),
     ]);
 
