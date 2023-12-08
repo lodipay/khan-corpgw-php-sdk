@@ -3,7 +3,7 @@
 use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Psr7\Response;
-use Lodipay\KhanCorpGwSDK\KhanCorpGwService;
+use Lodipay\KhanCorpGwSDK\KhanCorpGwAPI;
 
 function getMockAccessTokenHandler()
 {
@@ -18,8 +18,8 @@ function getMockAccessTokenHandler()
 }
 
 it('should return a token from API', function () {
-    /** @var KhanCorpGwService $service */
-    $service = test()->getMockClientService([
+    /** @var KhanCorpGwAPI $service */
+    $service = test()->getMockClientAPI([
         'handler' => HandlerStack::create(getMockAccessTokenHandler()),
     ]);
 

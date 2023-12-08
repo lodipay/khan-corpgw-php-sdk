@@ -2,12 +2,10 @@
 
 namespace Lodipay\KhanCorpGwSDK\Exception;
 
-use Lodipay\KhanCorpGwSDK\Dto\ResponseDTO;
-
 class BadResultException extends \Exception
 {
-    public function __construct(public ResponseDTO $responseDTO)
+    public function __construct(public string $message)
     {
-        parent::__construct("BadResultException: ");
+        parent::__construct($message);
     }
 }
