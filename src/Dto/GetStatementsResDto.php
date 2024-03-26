@@ -2,7 +2,7 @@
 
 namespace Lodipay\KhanCorpGwSDK\Dto;
 
-use Tsetsee\DTO\DTO\TseDTO;
+use Lodipay\DTO\DTO\TseDTO;
 
 class GetStatementsResDto extends TseDTO
 {

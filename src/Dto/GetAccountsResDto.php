@@ -2,64 +2,47 @@
 
 namespace Lodipay\KhanCorpGwSDK\Dto;
 
-use Tsetsee\DTO\DTO\TseDTO;
+use Lodipay\DTO\DTO\TseDTO;
 
 class GetAccountsResDto extends TseDTO
 {
-
     /**
      * Дансны дугаар
-     * 
-     * @var string
      */
     public string $number;
 
     /**
-     * Дансны төрөл
-     * 
-     * @var string
+     * Дансны төрөл.
      */
     public string $type;
 
     /**
      * Дансны валют
-     * 
-     * @var string
      */
     public string $currency;
 
     /**
-     * Төлөв
-     * 
-     * @var string
+     * Төлөв.
      */
     public string $status;
 
     /**
-     * Үлдэгдэл
-     * 
-     * @var float
+     * Үлдэгдэл.
      */
     public float $balance;
 
     /**
      * Дансны нэр
-     * 
-     * @var string
      */
     public string $name;
 
     /**
-     * Барилт хийсэн дүн
-     * 
-     * @var string
+     * Барилт хийсэн дүн.
      */
     public string $holdBalance;
 
     /**
-     * Боломжит үлдэгдэл
-     * 
-     * @var string
+     * Боломжит үлдэгдэл.
      */
     public string $avaliableBalance;
 }

@@ -11,11 +11,10 @@ use Lodipay\KhanCorpGwSDK\Dto\TransferDomesticReqDto;
 use Lodipay\KhanCorpGwSDK\Dto\TransferDomesticResDto;
 use Lodipay\KhanCorpGwSDK\Dto\TransferInterbankReqDto;
 use Lodipay\KhanCorpGwSDK\Dto\TransferInterbankResDto;
-use Tsetsee\TseGuzzle\TseGuzzle;
+use Lodipay\TseGuzzle\TseGuzzle;
 
 class KhanCorpGwAPI extends TseGuzzle
 {
-
     private ?AccessTokenData $accessTokenData = null;
 
     public function __construct(private $username, private $password, array $options = [])
@@ -28,26 +27,22 @@ class KhanCorpGwAPI extends TseGuzzle
 
     /**
      * Oauth access token override function.
-     * 
-     * @return string
      */
     protected function getAccessToken(): string
     {
         if (!$this->accessTokenData || !$this->accessTokenData->isAccessTokenActive()) {
             $this->accessTokenData = $this->getAccessTokenData();
         }
+
         return $this->accessTokenData->token;
     }
 
     /**
-     * Get access token from API
-     * 
-     * 
-     * @return AccessTokenData
+     * Get access token from API.
      */
     public function getAccessTokenData(): AccessTokenData
     {
-        $accessTokenData =  AccessTokenData::from($this->callAPI('POST', 'auth/token', [
+        $accessTokenData = AccessTokenData::from($this->callAPI('POST', 'auth/token', [
             'headers' => [
                 'Content-Type' => 'application/x-www-form-urlencoded',
             ],
@@ -56,8 +51,8 @@ class KhanCorpGwAPI extends TseGuzzle
                 'password' => $this->password,
             ],
             'query' => [
-                'grant_type' => 'client_credentials'
-            ]
+                'grant_type' => 'client_credentials',
+            ],
         ]));
         $accessTokenData->expireDate = CarbonImmutable::now()->addMinutes($_ENV['KHAN_CORPGW_TOKEN_TTL'] ?? 1800);
 
@@ -65,49 +60,41 @@ class KhanCorpGwAPI extends TseGuzzle
     }
 
     /**
-     * Get bank accounts
-     * 
+     * Get bank accounts.
+     *
      * @return array<GetAccountsResDto>
      */
     public function getAccounts(): array
     {
         return GetAccountsResDto::fromArray($this->callAPI('GET', 'accounts', [
-            'oauth2' => true
+            'oauth2' => true,
         ]));
     }
 
     /**
-     * Get balance of an account
-     * 
-     * @param string $accountNo
-     * 
-     * @return GetBalanceResDto
+     * Get balance of an account.
      */
     public function getBalance(string $accountNo): GetBalanceResDto
     {
-        return GetBalanceResDto::from($this->callAPI('GET', 'accounts/' . $accountNo . 'balance', [
-            'oauth2' => true
+        return GetBalanceResDto::from($this->callAPI('GET', 'accounts/'.$accountNo.'balance', [
+            'oauth2' => true,
         ]));
     }
 
     /**
-     * Get statements
-     * 
-     * @param string $accountNo
-     * @param string $beginDate
-     * @param string $endDate
-     * 
+     * Get statements.
+     *
      * @return array<GetStatementsResDto>
      */
     public function getStatements(string $accountNo, ?string $beginDate = null, ?string $endDate = null): array
     {
         return GetStatementsResDto::fromArray($this->callAPI(
             'GET',
-            'statements/' . $accountNo,
+            'statements/'.$accountNo,
             [
                 'query' => [
                     'beginDate' => $beginDate,
-                    'endDate' => $endDate
+                    'endDate' => $endDate,
                 ],
                 'oauth2' => true,
             ]
@@ -115,11 +102,7 @@ class KhanCorpGwAPI extends TseGuzzle
     }
 
     /**
-     * Domestic transfer
-     * 
-     * @param TransferDomesticReqDto $dto
-     * 
-     * @return TransferDomesticResDto
+     * Domestic transfer.
      */
     public function transferDomestic(TransferDomesticReqDto $dto): TransferDomesticResDto
     {
@@ -130,11 +113,7 @@ class KhanCorpGwAPI extends TseGuzzle
     }
 
     /**
-     * Interbank transfer
-     * 
-     * @param TransferInterbankReqDto $dto
-     * 
-     * @return TransferInterbankResDto
+     * Interbank transfer.
      */
     public function transferInterbank(TransferInterbankReqDto $dto): TransferInterbankResDto
     {
@@ -145,17 +124,14 @@ class KhanCorpGwAPI extends TseGuzzle
     }
 
     /**
-     * Call API
-     * 
-     * @param string $method
-     * @param string $uri
+     * Call API.
+     *
      * @param array<string, mixed> $options
-     * 
-     * @return mixed
      */
     private function callAPI(string $method, string $uri, array $options = []): mixed
     {
         $response = $this->client->request($method, $uri, $options);
+
         return json_decode((string) $response->getBody(), true);
     }
 }

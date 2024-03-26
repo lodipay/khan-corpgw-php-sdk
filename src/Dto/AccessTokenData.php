@@ -3,28 +3,22 @@
 namespace Lodipay\KhanCorpGwSDK\Dto;
 
 use Carbon\CarbonImmutable;
-use Tsetsee\DTO\DTO\TseDTO;
+use Lodipay\DTO\DTO\TseDTO;
 
 class AccessTokenData extends TseDTO
 {
     /**
-     * Хэрэглэгчийн token
-     * 
-     * @var string
+     * Хэрэглэгчийн token.
      */
     public string $token;
 
     /**
-     * Баталгаат и-мэйл хаяг
-     * 
-     * @var string
+     * Баталгаат и-мэйл хаяг.
      */
     public string $developer_email;
 
     /**
-     * Хүчинтэй байх хугацаа
-     * 
-     * @var CarbonImmutable
+     * Хүчинтэй байх хугацаа.
      */
     public CarbonImmutable $expireDate;
 
